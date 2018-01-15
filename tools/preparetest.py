@@ -2,14 +2,13 @@
 import os
 from selenium import webdriver
 
-pathRoot = os.path.dirname(os.path.abspath(__file__))
-
 
 class TestTools(object):
-    driver = webdriver.Chrome()
 
     @staticmethod
     def driverchoice(browsername, url):
+        pathRoot = os.path.dirname(os.path.abspath(__file__))
+        print(pathRoot+r'\resources\drivers\chromedriver.exe')
         if browsername == "chrome":
             edriver = webdriver.Chrome(executable_path=pathRoot + r'\resources\drivers\chromedriver.exe')
             gotdriver = True
@@ -28,3 +27,7 @@ class TestTools(object):
     def teardown(driver):
         driver.close()
         driver.quit
+
+
+
+

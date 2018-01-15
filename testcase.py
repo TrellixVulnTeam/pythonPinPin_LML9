@@ -7,11 +7,20 @@ from tools import preparetest
 
 class TestCase(unittest.TestCase):
     prepare = preparetest.TestTools()
-    driver = webdriver.chrome()
+    # driver = webdriver.chrome()
 
-    def setUp(self, browsername):
+    def setUp(self):
         url = "https://pinpineat.com/"
-        self.prepare.driverchoice(browsername, url)
+        self.prepare.driverchoice('chrome', url)
         self.driver = self.prepare.driver
 
-    # def test_login(self):
+    def test_login(self):
+        print("test_login")
+
+
+    def tearDown(self):
+        self.driver.quit()
+
+
+
+
