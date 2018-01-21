@@ -5,12 +5,9 @@ class fileoperate():
     def read_xls(path,sheetnum=0):
         workbook=xlrd.open_workbook(path)
         sheet_list=workbook.sheets()
-        print (sheet_list)
         sheet=workbook.sheet_by_index(sheetnum)
         rows=sheet.nrows
-        print (rows)
         cols=sheet.ncols
-        print (cols)
         list=[]
         i=0
 
@@ -20,6 +17,14 @@ class fileoperate():
             for j in range(cols):
                 line.append(sheet.cell_value(i,j))
             list.append(line)
+
+        # print(len(list))
+        # i=0
+        # for i in range(len(list)):
+        #     print()
+        #     j=0
+        #     for j in range(len(list[i])):
+        #         print (list[i][j],end="")
 
         return list
 
