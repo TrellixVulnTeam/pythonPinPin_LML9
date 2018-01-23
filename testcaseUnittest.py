@@ -13,12 +13,12 @@ from atools import preparetest
 from atools import fileoprate
 
 
-class TestCase:
+class TestCase(unittest.TestCase):
     pathRoot = os.path.dirname(os.path.abspath(__file__))
     prepare = preparetest.TestTools()
     countinu = False
 
-    def __init__(self):
+    def setUp(self):
         url = "https://pinpineat.com/#!/login"
         self.prepare.driverchoice('chrome', url, self.pathRoot)
         self.driver = self.prepare.getDriver()
@@ -36,7 +36,7 @@ class TestCase:
         file = fileoprate.fileoperate
         parameter = file.read_xls(path, 1)
         for i in range(0, len(parameter)):
-            self.test_login_null(parameter[i][2], str(parameter[i][3]))
+            self.login_null(parameter[i][2], str(parameter[i][3]))
 
     def login_negtive(self, email, password):
         wait = self.wait
@@ -60,7 +60,7 @@ class TestCase:
     def test_login_positive(self):
         driver = self.driver
         wait = self.wait
-        self.longin_action("12@12.com","123456")
+        self.longin_action("12@12.com", "123456")
         # assert change to user page
         user_btn = wait.until(ec.element_to_be_clickable((By.XPATH, "//*[@id='myNavBar']/ul/li[2]/a/span/span[2]")))
         # user_btn = driver.find_element_by_xpath("//*[@id='myNavBar']/ul/li[2]/a/span/span[2]")
@@ -71,14 +71,14 @@ class TestCase:
         print(user_ver.text)
         assert "12@12.com" in user_ver.text
         cookies = driver.get_cookies()
-        self.assert_cookies(cookies)
+        self.assertEqual(self.assert_cookies(cookies), 1, "login without stay test not success")
 
     def test_login_stay(self):
         driver = self.driver
         user_email = driver.find_element_by_xpath("//*[@id='username']")
         user_pass = driver.find_element_by_xpath("//*[@id='password']")
         login_btn = driver.find_element_by_xpath("//*[@id='loginDiv']/div[2]/div/form/div[3]/button")
-        stay_login=driver.find_element_by_xpath("//*[@id='loginDiv']/div[2]/div/form/div[3]/div/label/p")
+        stay_login = driver.find_element_by_xpath("//*[@id='loginDiv']/div[2]/div/form/div[3]/div/label/p")
         # operation on webpage
         user_email.send_keys("12@12.com")
         user_pass.send_keys("123456")
@@ -86,8 +86,8 @@ class TestCase:
         login_btn.click()
         time.sleep(3)
         cookies = driver.get_cookies()
-        print (cookies)
-        print(self.assert_cookies(cookies))
+        print(cookies)
+        self.assertEqual(self.assert_cookies(cookies), 14, "longin stay test not success")
 
     def tearDown(self):
         self.driver.quit()
@@ -102,22 +102,18 @@ class TestCase:
         user_pass.send_keys(password)
         login_btn.click()
 
-
-    def assert_cookies(self,cookies):
+    def assert_cookies(self, cookies):
         expiry = 0
+        print(cookies[0])
         for cookie in cookies:
             for key in cookie:
                 if key == "expiry":
                     expiry = cookie['expiry']
         i = round((expiry - time.time()) / (3600 * 24))
-        print("didferent is :",i)
         if round((expiry - time.time()) / (3600 * 24)) == 1:
             print("login expiry time is :", i, " day")
         return i
 
+
 if __name__ == "__main__":
-    t = TestCase()
-    # t.test_login_positive()
-    # t.test_para_xls2()
-    t.test_login_stay()
-    t.tearDown()
+    unittest.main()
