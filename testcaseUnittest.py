@@ -3,6 +3,11 @@ import unittest
 
 import os
 import time
+from unittest.test.test_suite import Test
+
+import pickle
+
+from pip._vendor import requests
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
@@ -24,6 +29,7 @@ class TestCase(unittest.TestCase):
         self.driver = self.prepare.getDriver()
         self.wait = WebDriverWait(self.driver, 30)
 
+    @unittest.skip("skipping")
     def test_para_xls1(self):
         path = self.pathRoot + r'\resources\parameter.xlsx'
         file = fileoprate.fileoperate
@@ -31,6 +37,7 @@ class TestCase(unittest.TestCase):
         for i in range(0, len(parameter)):
             self.login_negtive(parameter[i][0], str(parameter[i][1]))
 
+    @unittest.skip("skipping")
     def test_para_xls2(self):
         path = self.pathRoot + r'\resources\parameter.xlsx'
         file = fileoprate.fileoperate
@@ -38,6 +45,7 @@ class TestCase(unittest.TestCase):
         for i in range(0, len(parameter)):
             self.login_null(parameter[i][2], str(parameter[i][3]))
 
+    @unittest.skip("skipping")
     def login_negtive(self, email, password):
         wait = self.wait
         print("test with parameter:", email, password, ">>>>>>>>>>", end="")
@@ -48,6 +56,7 @@ class TestCase(unittest.TestCase):
         print("test success")
         self.driver.get("https://pinpineat.com/#!/login")
 
+    @unittest.skip("skipping")
     def login_null(self, email, password):
         print("test with parameter:", email, password, ">>>>>>>>", end="")
         self.longin_action(email, password)
@@ -57,6 +66,7 @@ class TestCase(unittest.TestCase):
         # if (!(loginPage.loginButton.getAttribute("disabled") == null)) {
         self.driver.get("https://pinpineat.com/#!/login")
 
+    @unittest.skip("skipping")
     def test_login_positive(self):
         driver = self.driver
         wait = self.wait
@@ -87,7 +97,23 @@ class TestCase(unittest.TestCase):
         time.sleep(3)
         cookies = driver.get_cookies()
         print(cookies)
+        cookie_dict={}
+        for cookie in cookies:
+            f=open(cookie['name']+'.pinpin','wb')
+            pickle.dump(cookie,f)
+            f.close()
+            # if cookie.has_key('name') and cookie.has_key('value'):
+            #     cookie_dict[cookie['name']]= cookie['value']
         self.assertEqual(self.assert_cookies(cookies), 14, "longin stay test not success")
+        driver.delete_all_cookies()
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.57 Safari/537.36'}
+        timeout = 5
+        r = requests.get('https://pinpineat.com/#!/shops', headers=headers, cookies=cookie_dict, timeout=timeout)
+        time.sleep(5)
+        element=driver.find_element_by_xpath('//*[@id="myNavBar"]/ul/li[1]/a/span')
+        print('aaa+',element.text)
+        print(r)
 
     def tearDown(self):
         self.driver.quit()
@@ -116,4 +142,7 @@ class TestCase(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+    suit=unittest.TestSuite
+    suit.addTest(TestCase('test_login_stay'))
+    unittest.TextTestRunner(verbosity=2).run(suit)
