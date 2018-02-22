@@ -17,6 +17,7 @@ class fileoperate():
             for j in range(cols):
                 line.append(sheet.cell_value(i,j))
             list.append(line)
+        print(list)
 
         # print(len(list))
         # i=0
@@ -30,4 +31,4 @@ class fileoperate():
 
 if __name__=="__main__":
     t=fileoperate
-    t.read_xls(r"C:\Users\colli\PycharmProjects\pythonPinPin\resources\parameter.xlsx",0)
+    t.read_xls(r"d:\PycharmProjects\pythonPinPin\resources\parameter.xlsx",0)

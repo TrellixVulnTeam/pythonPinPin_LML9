@@ -40,7 +40,7 @@ class TestCase:
 
     def login_negtive(self, email, password):
         wait = self.wait
-        print("test with parameter:", email, password, ">>>>>>>>>>", end="")
+        print("test with parameter:", email, password, ">>>>>>>>>>",end ='')
         self.longin_action(email, password)
         wrong_message = wait.until(ec.visibility_of_element_located((By.XPATH, "//*[@id='loginDiv']/div[2]/div/p")))
         # wrong_message=self.driver.find_element_by_xpath("//*[@id='loginDiv']/div[2]/div/p")
@@ -49,7 +49,7 @@ class TestCase:
         self.driver.get("https://pinpineat.com/#!/login")
 
     def login_null(self, email, password):
-        print("test with parameter:", email, password, ">>>>>>>>", end="")
+        print("test with parameter:", email, password, ">>>>>>>>",end='')
         self.longin_action(email, password)
         login_btn = self.driver.find_element_by_xpath("//*[@id='loginDiv']/div[2]/div/form/div[3]/button")
         if login_btn.get_attribute("diasabled") != "":
